@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EU Flight Monitor - API Documentation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/swagger.css') }}">
+</head>
+<body>
+    <div class="header">
+        <div class="title">
+            EU Flight Monitor
+            <span class="version-badge">1.0.0</span>
+            <span class="oas-badge">OAS 3.1</span>
+        </div>
+        <div style="color: #61affe; margin-top: 5px; font-size: 14px;">/openapi.json</div>
+    </div>
+
+    <div class="tag">default</div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/</span>
+            <span class="summary">Read Root</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Read Root</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div>No parameters</div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/')">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/airports</span>
+            <span class="summary">Get Airports</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get list of all airports</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div>No parameters</div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/airports')">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/airports/{airport_code}/flights</span>
+            <span class="summary">Get Airport Flights</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get all flights from a specific airport</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div class="parameter">
+                <div class="parameter-name">airport_code <span class="parameter-required">*</span></div>
+                <div class="parameter-type">string (path)</div>
+            </div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="param-input">
+                    <label for="airport_code">airport_code</label>
+                    <input type="text" id="airport_code" placeholder="Enter airport code">
+                </div>
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/airports/{airport_code}/flights', ['airport_code'])">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/flights/delayed</span>
+            <span class="summary">Get Delayed Flight List</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get all flights delayed by more than 2 hours</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div>No parameters</div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/flights/delayed')">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/flights/{flight_id}</span>
+            <span class="summary">Get Flight Details</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get details for a specific flight</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div class="parameter">
+                <div class="parameter-name">flight_id <span class="parameter-required">*</span></div>
+                <div class="parameter-type">integer (path)</div>
+            </div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="param-input">
+                    <label for="flight_id">flight_id</label>
+                    <input type="text" id="flight_id" placeholder="Enter flight ID">
+                </div>
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/flights/{flight_id}', ['flight_id'])">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/flights/active</span>
+            <span class="summary">Get Active Flight List</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get all currently active flights</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div>No parameters</div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/flights/active')">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/flights/search/{flight_number}</span>
+            <span class="summary">Search Flight</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Search for flight by flight number</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div class="parameter">
+                <div class="parameter-name">flight_number <span class="parameter-required">*</span></div>
+                <div class="parameter-type">string (path)</div>
+            </div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="param-input">
+                    <label for="flight_number">flight_number</label>
+                    <input type="text" id="flight_number" placeholder="Enter flight number">
+                </div>
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/flights/search/{flight_number}', ['flight_number'])">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <div class="endpoint-header" onclick="toggleEndpoint(this)">
+            <span class="method">GET</span>
+            <span class="path">/api/flights/live</span>
+            <span class="summary">Get Live Flights</span>
+        </div>
+        <div class="endpoint-content">
+            <div class="description">Get live flight data with optional filtering</div>
+            <div class="parameters-title">PARAMETERS</div>
+            <div class="parameter">
+                <div class="parameter-name">airline</div>
+                <div class="parameter-type">string (query)</div>
+                <div class="description">Filter by airline IATA code</div>
+            </div>
+            <div class="parameter">
+                <div class="parameter-name">limit</div>
+                <div class="parameter-type">integer (query)</div>
+                <div class="description">Limit the number of results (default: 100)</div>
+            </div>
+            
+            <button class="try-it" onclick="toggleTryIt(this)">Try it out</button>
+            
+            <div class="try-section">
+                <div class="param-input">
+                    <label for="airline">airline</label>
+                    <input type="text" id="airline" placeholder="Enter airline IATA code">
+                </div>
+                <div class="param-input">
+                    <label for="limit">limit</label>
+                    <input type="number" id="limit" placeholder="Enter limit (default: 100)">
+                </div>
+                <div class="execute-section">
+                    <button class="execute-button" onclick="executeRequest('/api/flights/live', [], {airline: 'airline', limit: 'limit'})">Execute</button>
+                </div>
+                <div class="response-section">
+                    <h4>Server response</h4>
+                    <div class="response-status"></div>
+                    <div class="response-body"></div>
+                </div>
+                <div class="curl-example"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = window.location.origin;
+
+        function toggleEndpoint(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('active');
+        }
+
+        function toggleTryIt(button) {
+            const trySection = button.nextElementSibling;
+            trySection.classList.toggle('active');
+            button.style.display = 'none';
+        }
+
+        function updateCurlExample(endpoint, params = {}) {
+            const endpointSection = event.target.closest('.endpoint');
+            const curlExample = endpointSection.querySelector('.curl-example');
+            let url = `${BASE_URL}${endpoint}`;
+            
+            // Replace path parameters
+            for (const [key, value] of Object.entries(params)) {
+                url = url.replace(`{${key}}`, value);
+            }
+
+            curlExample.textContent = `curl -X GET "${url}"`;
+        }
+
+        function executeRequest(endpoint, paramIds = [], queryParams = {}) {
+            const params = {};
+            for (const paramId of paramIds) {
+                const value = document.getElementById(paramId).value;
+                if (!value) {
+                    alert(`Please enter a value for ${paramId}`);
+                    return;
+                }
+                params[paramId] = value;
+            }
+
+            let url = endpoint;
+            for (const [key, value] of Object.entries(params)) {
+                url = url.replace(`{${key}}`, value);
+            }
+
+            // Add query parameters
+            const queryValues = {};
+            for (const [key, inputId] of Object.entries(queryParams)) {
+                const value = document.getElementById(inputId).value;
+                if (value) {
+                    queryValues[key] = value;
+                }
+            }
+            
+            if (Object.keys(queryValues).length > 0) {
+                url += '?' + new URLSearchParams(queryValues).toString();
+            }
+
+            const endpointSection = event.target.closest('.endpoint');
+            const responseSection = endpointSection.querySelector('.response-section');
+            const responseStatus = responseSection.querySelector('.response-status');
+            const responseBody = responseSection.querySelector('.response-body');
+
+            responseSection.classList.add('active');
+            responseStatus.textContent = 'Loading...';
+            responseStatus.className = 'response-status';
+            responseBody.textContent = '';
+
+            fetch(`${BASE_URL}${url}`)
+                .then(response => {
+                    responseStatus.textContent = `Status: ${response.status} ${response.statusText}`;
+                    responseStatus.classList.add(response.ok ? 'status-200' : 'status-error');
+                    return response.json();
+                })
+                .then(data => {
+                    responseBody.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                })
+                .catch(error => {
+                    responseStatus.textContent = 'Error';
+                    responseStatus.classList.add('status-error');
+                    responseBody.textContent = error.message;
+                });
+
+            updateCurlExample(url);
+        }
+    </script>
+</body>
+</html> 
