@@ -18,9 +18,9 @@ def create_app():
     with open(os.path.join(os.path.dirname(__file__), 'data/airports.json')) as f:
         AIRPORT_DATA = json.load(f)
 
-    # Configure MySQL database connection
+    # Configure MySQL database connection with PyMySQL
     app.config['SQLALCHEMY_DATABASE_URI'] = (
-        f"mysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@"
+        f"mysql+pymysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@"
         f"{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DATABASE')}"
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
