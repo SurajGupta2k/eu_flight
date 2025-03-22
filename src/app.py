@@ -40,7 +40,7 @@ def create_app():
     @app.route('/', methods=['GET'])
     def read_root():
         """Read Root - API Documentation"""
-        return render_template('docs.html')
+        return render_template('docs.html'), 200, {'Content-Type': 'text/html'}
 
     @app.route('/openapi.json', methods=['GET'])
     def openapi_json():
