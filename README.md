@@ -1,8 +1,117 @@
 # ✈️ EU Flight Monitor
 
-A comprehensive real-time flight monitoring system designed to track European flights and identify delays for passenger compensation claims. This project provides real-time flight data through a RESTful API, with a focus on monitoring flights delayed by more than 2 hours.
+A comprehensive system for monitoring flights across European airports and tracking delays for passenger compensation claims.
 
-![API Documentation Interface](./screenshots/api_docs.png)
+## Overview
+
+EU Flight Monitor is a Flask-based API that collects, stores, and provides real-time flight information from European airports. The system is designed to help identify flights delayed by more than 2 hours, assisting passengers in filing compensation claims under EU regulations.
+
+## Features
+
+- Real-time flight monitoring across European airports
+- Automatic delay detection and tracking
+- Comprehensive airport database with IATA/ICAO codes
+- RESTful API for accessing flight data
+- Integration with Aviation Stack API for live flight data
+
+## System Architecture
+
+### Database Schema
+
+The system uses MySQL with the following main tables:
+- `airports`: Stores European airport information (IATA/ICAO codes, location, etc.)
+- `airlines`: Airlines operating in Europe
+- `flights`: Flight schedules and status
+- `flight_status`: Possible flight statuses
+- `flight_status_updates`: Historical tracking of flight status changes
+
+### Data Collection Strategy
+
+1. **Airport Data**:
+   - Primary source: Curated JSON database (`airports.json`)
+   - Regular updates through aviation authorities' official data
+   - Manual verification for data accuracy
+
+2. **Flight Data**:
+   - Real-time data from Aviation Stack API
+   - Periodic polling (every 5-15 minutes)
+   - Backup data sources for redundancy
+
+3. **Delay Monitoring**:
+   - Continuous tracking of flight status updates
+   - Automatic flagging of delays > 120 minutes
+   - Historical delay data maintenance
+
+## API Endpoints
+
+### Airport Information
+- `GET /airports`: List all European airports
+- `GET /airports/{airport_code}/flights`: Get flights for specific airport
+
+### Flight Monitoring
+- `GET /api/flights/live`: Get real-time flight data
+- `GET /flights/delayed`: List flights delayed > 2 hours
+- `GET /flights/active`: List all active flights
+- `GET /flights/{flight_id}`: Get specific flight details
+- `GET /flights/search/{flight_number}`: Search flight by number
+
+### Statistics
+- `GET /api/stats/delays`: Get delay statistics by airline
+
+## Setup and Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Set up environment variables:
+   ```bash
+   MYSQL_USER=your_user
+   MYSQL_PASSWORD=your_password
+   MYSQL_HOST=your_host
+   MYSQL_DATABASE=your_database
+   AVIATION_STACK_API_KEY=your_api_key
+   ```
+4. Initialize the database:
+   ```bash
+   flask db upgrade
+   ```
+5. Run the application:
+   ```bash
+   python eu_flight/src/app.py
+   ```
+
+## Data Accuracy and Maintenance
+
+- Regular data validation against multiple sources
+- Automated tests for data consistency
+- Manual verification of critical updates
+- Backup systems for data redundancy
+
+## Security Measures
+
+- API key authentication
+- Rate limiting
+- HTTPS encryption
+- Regular security audits
+- Data backup and recovery procedures
+
+## Future Enhancements
+
+1. Machine learning for delay prediction
+2. Mobile app for passenger notifications
+3. Integration with airline compensation systems
+4. Extended coverage to non-EU airports
+5. Real-time weather impact analysis
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## 🌟 Key Features
 
@@ -13,196 +122,108 @@ A comprehensive real-time flight monitoring system designed to track European fl
   - Real-time status monitoring and updates
   - Automatic delay detection and tracking
 
+- **Cloud Database Integration**
+  - Integrated with freesqldatabase.com for cloud storage
+  - Automatic data synchronization between API and database
+  - Real-time data persistence for all flight updates
+  - Scalable cloud-based storage solution
+  - Secure remote database access
+
 - **Airport Management**
   - Database of European airports with IATA/ICAO codes
   - Geographical information including coordinates and timezones
   - Flight schedules for specific airports
   - Interactive airport search and filtering
 
-- **Delay Monitoring System**
-  - Automatic detection of flights delayed by >2 hours
-  - Historical delay tracking and statistics
-  - Delay reason documentation
-  - Compensation claim eligibility checking
-  - Real-time delay notifications
+## 🗄️ Database Configuration
 
-- **Interactive API Documentation**
-  - Swagger-like interface for API exploration
-  - Built-in API testing capabilities
-  - Detailed endpoint documentation
-  - Live request/response examples
+### Cloud Database Setup
+The project uses freesqldatabase.com for data storage. Configuration:
 
-## 🗄️ Database Schema
-
-### 1. Airports Table
-```sql
-CREATE TABLE airports (
-    iata_code CHAR(3) PRIMARY KEY,
-    icao_code CHAR(4) UNIQUE,
-    name VARCHAR(100) NOT NULL,
-    city VARCHAR(50) DEFAULT 'Unknown',
-    country VARCHAR(50) DEFAULT 'Unknown',
-    latitude FLOAT,
-    longitude FLOAT,
-    timezone VARCHAR(50)
-);
+```env
+MYSQL_USER=your_freesql_username
+MYSQL_PASSWORD=your_freesql_password
+MYSQL_HOST=sql12.freesqldatabase.com
+MYSQL_DATABASE=your_database_name
 ```
 
-### 2. Airlines Table
-```sql
-CREATE TABLE airlines (
-    airline_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) DEFAULT 'Unknown Airline',
-    iata_code CHAR(2) UNIQUE,
-    icao_code CHAR(3) UNIQUE,
-    country VARCHAR(50) DEFAULT 'Unknown',
-    active BOOLEAN DEFAULT TRUE
-);
-```
+### Database Schema
+Tables are automatically created in the cloud database:
+- `flight_status`: Stores possible flight statuses
+- `airports`: European airport information
+- `airlines`: Airline details
+- `flights`: Flight records
+- `flight_status_updates`: Real-time status changes
 
-### 3. Flights Table
-```sql
-CREATE TABLE flights (
-    flight_id INT AUTO_INCREMENT PRIMARY KEY,
-    flight_number VARCHAR(10) NOT NULL,
-    airline_id INT NOT NULL,
-    departure_airport CHAR(3),
-    arrival_airport CHAR(3),
-    scheduled_departure DATETIME NOT NULL,
-    scheduled_arrival DATETIME,
-    status VARCHAR(20) NOT NULL DEFAULT 'SCHEDULED',
-    delay_minutes INT DEFAULT 0,
-    FOREIGN KEY (airline_id) REFERENCES airlines(airline_id),
-    FOREIGN KEY (departure_airport) REFERENCES airports(iata_code),
-    FOREIGN KEY (arrival_airport) REFERENCES airports(iata_code)
-);
-```
+### Data Flow
+1. Aviation Stack API provides real-time flight data
+2. Data is processed by Flask backend
+3. Information is stored in freesqldatabase.com
+4. API endpoints serve data from cloud database
+5. Real-time updates maintain data consistency
 
-## 🛠️ Technology Stack
+## 🔄 Data Synchronization
 
-- **Backend**: Python Flask
-- **Database**: MySQL 8.0+
-- **External API**: Aviation Stack
-- **Documentation**: Interactive HTML/CSS/JS
-- **ORM**: SQLAlchemy
-- **Environment**: Python 3.8+
+The system maintains real-time synchronization between:
+- Aviation Stack API (data source)
+- freesqldatabase.com (cloud storage)
+- API endpoints (data access)
 
-## 📊 Data Flow Architecture
+Key synchronization points:
+- `/api/flights/live`: Fetches and stores real-time data
+- Status updates are immediately persisted
+- Historical data is maintained for analysis
+- Automatic conflict resolution for concurrent updates
 
-```mermaid
-graph LR
-    A[Aviation Stack API] -->|Real-time Data| B[Flask Backend]
-    B -->|Store| C[MySQL Database]
-    B -->|Serve| D[API Endpoints]
-    D -->|Display| E[Interactive Documentation]
-    C -->|Query| B
-```
+### 5. Deploy to Vercel (Recommended)
 
-## 🚀 Installation
-
-1. Clone the repository:
+1. Install Vercel CLI:
    ```bash
-   git clone https://github.com/yourusername/eu_flight.git
-   cd eu_flight
+   npm install -g vercel
    ```
 
-2. Create and activate a virtual environment:
+2. Login to Vercel:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   venv\Scripts\activate     # Windows
+   vercel login
    ```
 
-3. Install dependencies:
+3. Deploy the application:
    ```bash
-   pip install -r requirements.txt
+   vercel
    ```
 
-4. Configure environment variables:
+4. For production deployment:
    ```bash
-   cp .env.example .env
-   # Edit .env with your configuration:
-   # MYSQL_USER=your_user
-   # MYSQL_PASSWORD=your_password
-   # MYSQL_HOST=localhost
-   # MYSQL_DATABASE=eu_flight
-   # AVIATION_API_KEY=your_api_key
+   vercel --prod
    ```
 
-5. Initialize the database:
-   ```bash
-   mysql -u root -p < eu_flight/src/database/schema.sql
-   mysql -u root -p < eu_flight/src/database/sample_data.sql
+The application is already configured for Vercel deployment with the `vercel.json` file. Vercel will:
+- Automatically detect your Python application
+- Install dependencies from `requirements.txt`
+- Set up serverless functions
+- Deploy with environment variables
+- Provide a unique URL for your application
+
+#### Vercel Deployment Features
+- Zero configuration required
+- Automatic HTTPS
+- Continuous deployment from GitHub
+- Serverless architecture
+- Built-in CDN
+- Real-time logs and monitoring
+
+#### Environment Variables on Vercel
+You can set environment variables in the Vercel dashboard:
+1. Go to your project settings
+2. Navigate to "Environment Variables"
+3. Add the following variables (replace with your actual values):
+   ```
+   MYSQL_USER=your_database_user
+   MYSQL_PASSWORD=your_database_password
+   MYSQL_HOST=your_database_host
+   MYSQL_DATABASE=your_database_name
+   AVIATION_API_KEY=your_api_key
    ```
 
-## 📸 Screenshots
-
-### API Documentation Interface
-![API Documentation](./screenshots/api_docs.png)
-
-### Live Flight Tracking
-![Live Flights](./screenshots/live_flights.png)
-
-### Delay Monitoring Dashboard
-![Delay Monitor](./screenshots/delay_monitor.png)
-
-### Airport Information
-![Airport Info](./screenshots/airport_info.png)
-
-## 📊 Sample Queries
-
-### Get Delayed Flights
-```sql
-SELECT 
-    f.flight_number,
-    al.name AS airline,
-    dep.city AS departure_city,
-    arr.city AS arrival_city,
-    f.scheduled_departure,
-    f.delay_minutes
-FROM flights f
-JOIN airlines al ON f.airline_id = al.airline_id
-JOIN airports dep ON f.departure_airport = dep.iata_code
-JOIN airports arr ON f.arrival_airport = arr.iata_code
-WHERE f.delay_minutes > 120
-ORDER BY f.delay_minutes DESC;
-```
-
-## 🔒 Security Features
-
-- API key authentication
-- SQL injection prevention
-- Input validation
-- Error handling
-- Secure password storage
-- Rate limiting
-- CORS protection
-
-## 🚧 Future Enhancements
-
-1. Machine learning for delay prediction
-2. Mobile app development
-3. Email notifications for delays
-4. Extended airport coverage
-5. Weather impact analysis
-6. Real-time flight path visualization
-7. Passenger compensation calculator
-
-## 👥 Authors
-
-- Suraj Gupta - Initial work and development
-
-## 🙏 Acknowledgments
-
-- Aviation Stack API for flight data
-- Flask community for the web framework
-- SQLAlchemy team for the ORM
-- All contributors and testers
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-⭐ Don't forget to star this repository if you found it helpful!
+⚠️ **Security Note**: Never commit sensitive credentials to version control. Always use environment variables for sensitive information. 
 
