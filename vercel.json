@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src": "eu_flight/src/app.py",
+            "src": "eu_flight/src/index.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "eu_flight/src/app.py"
+            "dest": "eu_flight/src/index.py"
         }
     ]
-} 
+}
